@@ -26,17 +26,19 @@ export class PlayScene extends Phaser.Scene {
     }
 
     init() {
-        this.keys = this.input.keyboard.addKeys({
-            S: Phaser.Input.Keyboard.KeyCodes.S,
-            D: Phaser.Input.Keyboard.KeyCodes.D,
-            F: Phaser.Input.Keyboard.KeyCodes.F,
-            SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
-            J: Phaser.Input.Keyboard.KeyCodes.J,
-            K: Phaser.Input.Keyboard.KeyCodes.K,
-            L: Phaser.Input.Keyboard.KeyCodes.L
-        })
+        this.loadedSec = undefined
 
-        const url = "./assets/test.bme"
+        this.keys = [
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
+        ]
+
+        const url = "./assets/test4.bme"
         axios.get(url)
             .then((response: any) => {
                 const bmsSource = response.data
@@ -54,7 +56,6 @@ export class PlayScene extends Phaser.Scene {
             .catch((error: any) => {
                 console.log(error)
             })
-            .then()
     }
 
     create() {
@@ -73,12 +74,14 @@ export class PlayScene extends Phaser.Scene {
             this.scene.start("title")
         })
 
+
+
     }
     update(time: number, dt: number) {
         if (this.loadedSec != undefined) {
-            this.playingSec = this.time.now/1000 - this.loadedSec
+            this.playingSec = this.time.now / 1000 - this.loadedSec
             this.beat = this.timing.secondsToBeat(this.playingSec)
-            this.timeText!.setText(`${this.beat}`)
+            this.timeText!.setText(`${this.playingSec} ${this.beat}`)
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
                 for (const band of this.chart.longNoteBands[i]) {
@@ -91,26 +94,18 @@ export class PlayScene extends Phaser.Scene {
                 }
             }
 
-            if (Phaser.Input.Keyboard.JustDown(this.keys.S)) {
-                this.chart.judge(this.playingSec, 0)
+            // key down
+            for (const i of [...Array(7)].map((_, i) => (i))) {
+                if (Phaser.Input.Keyboard.JustDown(this.keys[i])) {
+                    this.chart.judgeKeyDown(this.playingSec, i)
+                }
             }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.D)) {
-                this.chart.judge(this.playingSec, 1)
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.F)) {
-                this.chart.judge(this.playingSec, 2)
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.SPACE)) {
-                this.chart.judge(this.playingSec, 3)
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.J)) {
-                this.chart.judge(this.playingSec, 4)
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.K)) {
-                this.chart.judge(this.playingSec, 5)
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.L)) {
-                this.chart.judge(this.playingSec, 6)
+
+            // key hold
+            for (const i of [...Array(7)].map((_, i) => (i))) {
+                if (this.chart.isHolds[i] && !this.keys[i].isDown) {
+                    this.chart.judgeKeyHold(this.playingSec, i)
+                }
             }
 
         }
