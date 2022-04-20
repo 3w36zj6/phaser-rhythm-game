@@ -6,7 +6,7 @@ export class Chart {
             this.lanes[i] = new Array()
         }
 
-        const replacement: any = {
+        const replacementNormalNote: any = {
             11: 0,
             12: 1,
             13: 2,
@@ -16,8 +16,25 @@ export class Chart {
             19: 6
         }
 
+        const replacementLongNote: any = {
+            51: 0,
+            52: 1,
+            53: 2,
+            54: 3,
+            55: 4,
+            58: 5,
+            59: 6
+        }
+
         for (const object of chart.objects._objects) {
-            const noteIndex: number = replacement[parseInt(object.channel)]
+            let noteIndex: number = replacementNormalNote[parseInt(object.channel)]
+            let isLongNote: boolean = false
+
+            if (parseInt(object.channel) in replacementLongNote) {
+                noteIndex = replacementLongNote[parseInt(object.channel)]
+                isLongNote = true
+            }
+
             let noteColor: number = 0xffffff
             if (noteIndex == 1 || noteIndex == 5) {
                 noteColor = 0x2faceb
