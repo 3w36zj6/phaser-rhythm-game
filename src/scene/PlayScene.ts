@@ -92,25 +92,25 @@ export class PlayScene extends Phaser.Scene {
             }
 
             if (Phaser.Input.Keyboard.JustDown(this.keys.S)) {
-                this.chart.judge(this.beat, 0)
+                this.chart.judge(this.playingTime/1000, 0)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.D)) {
-                this.chart.judge(this.beat, 1)
+                this.chart.judge(this.playingTime/1000, 1)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.F)) {
-                this.chart.judge(this.beat, 2)
+                this.chart.judge(this.playingTime/1000, 2)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.SPACE)) {
-                this.chart.judge(this.beat, 3)
+                this.chart.judge(this.playingTime/1000, 3)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.J)) {
-                this.chart.judge(this.beat, 4)
+                this.chart.judge(this.playingTime/1000, 4)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.K)) {
-                this.chart.judge(this.beat, 5)
+                this.chart.judge(this.playingTime/1000, 5)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.L)) {
-                this.chart.judge(this.beat, 6)
+                this.chart.judge(this.playingTime/1000, 6)
             }
 
         }

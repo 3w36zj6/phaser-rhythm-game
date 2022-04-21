@@ -1,3 +1,5 @@
+const bms = require("bms")
+
 export class Chart {
     public lanes: any[][] = new Array()
     public longNoteBands: any[][] = new Array()
@@ -35,7 +37,7 @@ export class Chart {
             let noteIndex: number = replacementNormalNote[parseInt(object.channel)]
             let isLongNoteStart: boolean = false
             let isLongNoteEnd: boolean = false
-            const beat = this.chart.timeSignatures.measureToBeat(object.measure, object.fraction)
+            const beat = chart.timeSignatures.measureToBeat(object.measure, object.fraction)
 
             if (parseInt(object.channel) in replacementLongNote) {
                 noteIndex = replacementLongNote[parseInt(object.channel)]
@@ -76,6 +78,7 @@ export class Chart {
 
             const note = {
                 "beat": beat,
+                "sec": bms.Timing.fromBMSChart(chart).beatToSeconds(beat),
                 "rectangle": scene.add.rectangle(200 + 100 * noteIndex, 0, 100, 30, noteColor),
                 "isJudged": false,
                 "isLongStart": isLongNoteStart,
@@ -98,9 +101,9 @@ export class Chart {
         return this.longNoteBands
     }
 
-    public judge = (beat: number, noteIndex: number) => {
+    public judge = (sec: number, noteIndex: number) => {
         for (const note of this.lanes[noteIndex]) {
-            if (!note.isJudged && note.beat - 1 <= beat && beat <= note.beat + 1) {
+            if (!note.isJudged && note.sec - 0.1 <= sec && sec <= note.sec + 0.1) {
                 note.isJudged = true
                 note.rectangle.visible = false
                 return
