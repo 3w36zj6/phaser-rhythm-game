@@ -19,11 +19,23 @@ export class PlayScene extends Phaser.Scene {
 
     private noteSpeed: number = 300
 
+    private keys?: any
+
     constructor() {
         super("play")
     }
 
     init() {
+        this.keys = this.input.keyboard.addKeys({
+            S: Phaser.Input.Keyboard.KeyCodes.S,
+            D: Phaser.Input.Keyboard.KeyCodes.D,
+            F: Phaser.Input.Keyboard.KeyCodes.F,
+            SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            J: Phaser.Input.Keyboard.KeyCodes.J,
+            K: Phaser.Input.Keyboard.KeyCodes.K,
+            L: Phaser.Input.Keyboard.KeyCodes.L
+        })
+
         const url = "./assets/test.bme"
         axios.get(url)
             .then((response: any) => {
@@ -79,6 +91,27 @@ export class PlayScene extends Phaser.Scene {
                 }
             }
 
+            if (Phaser.Input.Keyboard.JustDown(this.keys.S)) {
+                this.chart.judge(this.beat, 0)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.D)) {
+                this.chart.judge(this.beat, 1)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.F)) {
+                this.chart.judge(this.beat, 2)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.SPACE)) {
+                this.chart.judge(this.beat, 3)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.J)) {
+                this.chart.judge(this.beat, 4)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.K)) {
+                this.chart.judge(this.beat, 5)
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.L)) {
+                this.chart.judge(this.beat, 6)
+            }
 
         }
     }

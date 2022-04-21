@@ -97,4 +97,14 @@ export class Chart {
     public getLongNoteBands(): any {
         return this.longNoteBands
     }
+
+    public judge = (beat: number, noteIndex: number) => {
+        for (const note of this.lanes[noteIndex]) {
+            if (!note.isJudged && note.beat - 1 <= beat && beat <= note.beat + 1) {
+                note.isJudged = true
+                note.rectangle.visible = false
+                return
+            }
+        }
+    }
 }
