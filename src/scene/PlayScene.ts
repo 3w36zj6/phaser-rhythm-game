@@ -17,6 +17,8 @@ export class PlayScene extends Phaser.Scene {
     private playingTime?: number
     private beat?: number
 
+    private noteSpeed: number = 300
+
     constructor() {
         super("play")
     }
@@ -59,8 +61,6 @@ export class PlayScene extends Phaser.Scene {
             this.scene.start("title")
         })
 
-
-
     }
     update(time: number, dt: number) {
         if (this.loadedTime != undefined) {
@@ -69,8 +69,13 @@ export class PlayScene extends Phaser.Scene {
             this.timeText!.setText(`${this.beat}`)
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
+                for (const band of this.chart.longNoteBands[i]) {
+                    band.rectangle.height = (band.endBeat - band.startBeat) * this.noteSpeed
+                    band.rectangle.y = 600 + (this.beat! - band.startBeat) * this.noteSpeed - (band.endBeat - band.startBeat) * this.noteSpeed
+
+                }
                 for (const note of this.chart.lanes[i]) {
-                    note.rectangle.y = 600 + (this.beat! - note.beat) * 200
+                    note.rectangle.y = 600 + (this.beat! - note.beat) * this.noteSpeed
                 }
             }
 
