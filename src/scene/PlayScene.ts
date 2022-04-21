@@ -13,8 +13,8 @@ export class PlayScene extends Phaser.Scene {
 
     private judgeLine?: Phaser.GameObjects.Rectangle
 
-    private loadedTime?: number
-    private playingTime?: number
+    private loadedSec?: number
+    private playingSec?: number
     private beat?: number
 
     private noteSpeed: number = 300
@@ -49,7 +49,7 @@ export class PlayScene extends Phaser.Scene {
                 this.timing = bms.Timing.fromBMSChart(compileResult.chart)
 
                 console.log("ロード完了時間", this.time.now)
-                this.loadedTime = this.time.now
+                this.loadedSec = this.time.now / 1000
             })
             .catch((error: any) => {
                 console.log(error)
@@ -75,9 +75,9 @@ export class PlayScene extends Phaser.Scene {
 
     }
     update(time: number, dt: number) {
-        if (this.loadedTime != undefined) {
-            this.playingTime = this.time.now - this.loadedTime
-            this.beat = this.timing.secondsToBeat(this.playingTime / 1000)
+        if (this.loadedSec != undefined) {
+            this.playingSec = this.time.now/1000 - this.loadedSec
+            this.beat = this.timing.secondsToBeat(this.playingSec)
             this.timeText!.setText(`${this.beat}`)
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
@@ -92,25 +92,25 @@ export class PlayScene extends Phaser.Scene {
             }
 
             if (Phaser.Input.Keyboard.JustDown(this.keys.S)) {
-                this.chart.judge(this.playingTime/1000, 0)
+                this.chart.judge(this.playingSec, 0)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.D)) {
-                this.chart.judge(this.playingTime/1000, 1)
+                this.chart.judge(this.playingSec, 1)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.F)) {
-                this.chart.judge(this.playingTime/1000, 2)
+                this.chart.judge(this.playingSec, 2)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.SPACE)) {
-                this.chart.judge(this.playingTime/1000, 3)
+                this.chart.judge(this.playingSec, 3)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.J)) {
-                this.chart.judge(this.playingTime/1000, 4)
+                this.chart.judge(this.playingSec, 4)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.K)) {
-                this.chart.judge(this.playingTime/1000, 5)
+                this.chart.judge(this.playingSec, 5)
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.L)) {
-                this.chart.judge(this.playingTime/1000, 6)
+                this.chart.judge(this.playingSec, 6)
             }
 
         }
