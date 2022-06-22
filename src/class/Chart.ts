@@ -6,6 +6,8 @@ export class Chart {
 
     public isHolds = new Array<boolean>(7).fill(false)
 
+    public judges: number[] = [0, 0, 0, 0, 0, 0, 0]
+
     constructor(private scene: Phaser.Scene, private chart: any) {
         for (const i of [...Array(7)].map((_, i) => (i))) {
             this.lanes[i] = new Array()
@@ -105,9 +107,10 @@ export class Chart {
 
     public judgeKeyDown = (sec: number, noteIndex: number) => {
         for (const note of this.lanes[noteIndex]) {
-            if (!note.isJudged && !note.isLongEnd && note.sec - 0.1 <= sec && sec <= note.sec + 0.1) {
+            if (!note.isJudged && !note.isLongEnd && note.sec - 0.5 <= sec && sec <= note.sec + 0.5) {
                 note.isJudged = true
                 note.rectangle.visible = false
+                this.judges[noteIndex]++
 
                 if (note.isLongStart) {
                     this.isHolds[noteIndex] = true
@@ -119,11 +122,12 @@ export class Chart {
     }
 
     public judgeKeyHold = (sec: number, noteIndex: number) => {
+        this.isHolds[noteIndex] = false
         for (const note of this.lanes[noteIndex]) {
             if (!note.isJudged && note.isLongEnd) {
                 note.isJudged = true
                 note.rectangle.visible = false
-                this.isHolds[noteIndex] = false
+
 
                 return
             }

@@ -39,7 +39,7 @@ export class PlayScene extends Phaser.Scene {
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
         ]
 
-        const url = "./assets/test4.bme"
+        const url = "./assets/test.bme"
         axios.get(url)
             .then((response: any) => {
                 const bmsSource = response.data
@@ -83,7 +83,8 @@ export class PlayScene extends Phaser.Scene {
         if (this.loadedSec != undefined) {
             this.playingSec = this.time.now / 1000 - this.loadedSec
             this.beat = this.timing.secondsToBeat(this.playingSec)
-            this.timeText!.setText(`${this.playingSec} ${this.beat}`)
+            this.timeText!.setText(`${this.chart.isHolds}`)
+            //this.timeText!.setText(`${this.playingSec} ${this.beat}`)
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
                 for (const band of this.chart.longNoteBands[i]) {
@@ -93,6 +94,11 @@ export class PlayScene extends Phaser.Scene {
                 }
                 for (const note of this.chart.lanes[i]) {
                     note.rectangle.y = 600 + (this.beat! - note.beat) * this.noteSpeed
+                    if (!note.isJudged && note.sec + 0.5 < this.playingSec) {
+                        note.isJudged = true
+                        note.rectangle.visible = false
+                        this.chart.isHolds[i] = false
+                    }
                 }
             }
 
@@ -107,6 +113,7 @@ export class PlayScene extends Phaser.Scene {
             for (const i of [...Array(7)].map((_, i) => (i))) {
                 if (this.chart.isHolds[i] && !this.keys[i].isDown) {
                     this.chart.judgeKeyHold(this.playingSec, i)
+
                 }
             }
 
