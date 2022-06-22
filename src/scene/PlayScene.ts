@@ -26,6 +26,7 @@ export class PlayScene extends Phaser.Scene {
     }
 
     init() {
+        const startTime = new Date()
         this.loadedSec = undefined
 
         this.keys = [
@@ -50,8 +51,9 @@ export class PlayScene extends Phaser.Scene {
 
                 this.timing = bms.Timing.fromBMSChart(compileResult.chart)
 
-                console.log("ロード完了時間", this.time.now)
-                this.loadedSec = this.time.now / 1000
+                const endTime = new Date()
+
+                this.loadedSec = (this.time.now + endTime.getTime() - startTime.getTime()) / 1000
             })
             .catch((error: any) => {
                 console.log(error)
