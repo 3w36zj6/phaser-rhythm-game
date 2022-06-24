@@ -105,15 +105,15 @@ export class Chart {
         return this.longNoteBands
     }
 
-    public judgeKeyDown = (sec: number, noteIndex: number) => {
-        for (const note of this.lanes[noteIndex]) {
+    public judgeKeyDown = (sec: number, laneIndex: number) => {
+        for (const note of this.lanes[laneIndex]) {
             if (!note.isJudged && !note.isLongEnd && note.sec - 0.5 <= sec && sec <= note.sec + 0.5) {
                 note.isJudged = true
                 note.rectangle.visible = false
-                this.judges[noteIndex]++
+                this.judges[laneIndex]++
 
                 if (note.isLongStart) {
-                    this.isHolds[noteIndex] = true
+                    this.isHolds[laneIndex] = true
                 }
 
                 return
@@ -121,14 +121,19 @@ export class Chart {
         }
     }
 
-    public judgeKeyHold = (sec: number, noteIndex: number) => {
-        this.isHolds[noteIndex] = false
-        for (const note of this.lanes[noteIndex]) {
+    public judgeKeyHold = (sec: number, laneIndex: number) => {
+        this.isHolds[laneIndex] = false
+        for (const note of this.lanes[laneIndex]) {
             if (!note.isJudged && note.isLongEnd) {
                 note.isJudged = true
                 note.rectangle.visible = false
+                this.judges[laneIndex]++
+                for (const band of this.longNoteBands[laneIndex]) {
+                    if (band.endBeat == note.beat) {
+                        band.rectangle.visible = false
 
-
+                    }
+                }
                 return
             }
         }

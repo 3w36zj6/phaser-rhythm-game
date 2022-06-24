@@ -88,18 +88,33 @@ export class PlayScene extends Phaser.Scene {
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
                 for (const band of this.chart.longNoteBands[i]) {
-                    band.rectangle.height = Math.max((band.endBeat - band.startBeat + Math.min(band.startBeat - (this.beat!),0)) * this.noteSpeed,0)
+                    band.rectangle.height = Math.max((band.endBeat - band.startBeat + Math.min(band.startBeat - (this.beat!), 0)) * this.noteSpeed, 0)
                     band.rectangle.y = 600 + (this.beat! - band.startBeat) * this.noteSpeed - (band.endBeat - band.startBeat) * this.noteSpeed
-                    band.rectangle.y = 600 + Math.min((this.beat! - band.endBeat) * this.noteSpeed,0)
+                    band.rectangle.y = 600 + Math.min((this.beat! - band.endBeat) * this.noteSpeed, 0)
                 }
-                for (const note of this.chart.lanes[i]) {
-                    note.rectangle.y = 600 + Math.min((this.beat! - note.beat) * this.noteSpeed,0)
-                    if (!note.isJudged && ((!note.isLongEnd && note.sec + 0.5 < this.playingSec) || (note.isLongEnd && note.sec < this.playingSec))) {
+                this.chart.lanes[i].forEach((note: any, noteIndex: number) => {
+                    note.rectangle.y = 600 + Math.min((this.beat! - note.beat) * this.noteSpeed, 0)
+                    if (!note.isJudged && ((!note.isLongEnd && note.sec + 0.5 < this.playingSec!) || (note.isLongEnd && note.sec < this.playingSec!))) {
                         note.isJudged = true
                         note.rectangle.visible = false
                         this.chart.isHolds[i] = false
+
+                        if (note.isLongStart) {
+                            this.chart.lanes[i][noteIndex + 1].isJudged = true
+                            this.chart.lanes[i][noteIndex + 1].rectangle.visible = false
+                            for (const band of this.chart.longNoteBands[i]) {
+                                if (band.startBeat == note.beat) {
+                                    band.rectangle.visible = false
+                                }
+
+                            }
+                        }
+
+                        if (note.isLongEnd) {
+                            //judges++
+                        }
                     }
-                }
+                })
             }
 
             // key down
