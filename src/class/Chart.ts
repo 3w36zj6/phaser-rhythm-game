@@ -105,6 +105,39 @@ export class Chart {
         return this.longNoteBands
     }
 
+    public update(beat: number, playingSec: number, noteSpeed: number) {
+        for (const i of [...Array(7)].map((_, i) => (i))) {
+            for (const band of this.longNoteBands[i]) {
+                band.rectangle.height = Math.max((band.endBeat - band.startBeat + Math.min(band.startBeat - (beat), 0)) * noteSpeed, 0)
+                band.rectangle.y = 600 + (beat - band.startBeat) * noteSpeed - (band.endBeat - band.startBeat) * noteSpeed
+                band.rectangle.y = 600 + Math.min((beat - band.endBeat) * noteSpeed, 0)
+            }
+            this.lanes[i].forEach((note: any, noteIndex: number) => {
+                note.rectangle.y = 600 + Math.min((beat - note.beat) * noteSpeed, 0)
+                if (!note.isJudged && ((!note.isLongEnd && note.sec + 0.5 < playingSec) || (note.isLongEnd && note.sec < playingSec))) {
+                    note.isJudged = true
+                    note.rectangle.visible = false
+                    this.isHolds[i] = false
+
+                    if (note.isLongStart) {
+                        this.lanes[i][noteIndex + 1].isJudged = true
+                        this.lanes[i][noteIndex + 1].rectangle.visible = false
+                        for (const band of this.longNoteBands[i]) {
+                            if (band.startBeat == note.beat) {
+                                band.rectangle.visible = false
+                            }
+
+                        }
+                    }
+
+                    if (note.isLongEnd) {
+                        this.judges[i]++
+                    }
+                }
+            })
+        }
+    }
+
     public judgeKeyDown = (sec: number, laneIndex: number) => {
         for (const note of this.lanes[laneIndex]) {
             if (!note.isJudged && !note.isLongEnd && note.sec - 0.5 <= sec && sec <= note.sec + 0.5) {
