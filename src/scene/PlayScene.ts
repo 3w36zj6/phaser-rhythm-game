@@ -83,17 +83,17 @@ export class PlayScene extends Phaser.Scene {
         if (this.loadedSec != undefined) {
             this.playingSec = this.time.now / 1000 - this.loadedSec
             this.beat = this.timing.secondsToBeat(this.playingSec)
-            this.timeText!.setText(`${this.chart.isHolds}`)
+            this.timeText!.setText(`${this.chart.judges}`)
             //this.timeText!.setText(`${this.playingSec} ${this.beat}`)
 
             for (const i of [...Array(7)].map((_, i) => (i))) {
                 for (const band of this.chart.longNoteBands[i]) {
-                    band.rectangle.height = (band.endBeat - band.startBeat) * this.noteSpeed
+                    band.rectangle.height = Math.max((band.endBeat - band.startBeat + Math.min(band.startBeat - (this.beat!),0)) * this.noteSpeed,0)
                     band.rectangle.y = 600 + (this.beat! - band.startBeat) * this.noteSpeed - (band.endBeat - band.startBeat) * this.noteSpeed
-
+                    band.rectangle.y = 600 + Math.min((this.beat! - band.endBeat) * this.noteSpeed,0)
                 }
                 for (const note of this.chart.lanes[i]) {
-                    note.rectangle.y = 600 + (this.beat! - note.beat) * this.noteSpeed
+                    note.rectangle.y = 600 + Math.min((this.beat! - note.beat) * this.noteSpeed,0)
                     if (!note.isJudged && ((!note.isLongEnd && note.sec + 0.5 < this.playingSec) || (note.isLongEnd && note.sec < this.playingSec))) {
                         note.isJudged = true
                         note.rectangle.visible = false
