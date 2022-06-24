@@ -21,6 +21,17 @@ export class PlayScene extends Phaser.Scene {
 
     private keys?: any
 
+    private laneBackgrounds?: Phaser.GameObjects.Rectangle[]
+    private laneBackgroundColors: number[] = [
+        0x330d09,
+        0x333109,
+        0x123309,
+        0x093325,
+        0x091e33,
+        0x190933,
+        0x33092a
+    ]
+
     constructor() {
         super("play")
     }
@@ -38,6 +49,9 @@ export class PlayScene extends Phaser.Scene {
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
         ]
+
+        this.laneBackgrounds = [...Array(7)].map((_, i) => (this.add.rectangle(300 + 100 * i, 360, 100, 720, this.laneBackgroundColors[i], 128)).setDepth(-2))
+
 
         const url = "./assets/test.bme"
         axios.get(url)

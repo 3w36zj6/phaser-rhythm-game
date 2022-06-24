@@ -71,7 +71,7 @@ export class Chart {
                 const band = {
                     "startBeat": beatEndLongNote[noteIndex],
                     "endBeat": beat,
-                    "rectangle": scene.add.rectangle(200 + 100 * noteIndex, 0, 100, 0, 0x888888, 128)
+                    "rectangle": scene.add.rectangle(300 + 100 * noteIndex, 0, 100, 0, 0x888888, 128)
                 }
 
                 band.rectangle.depth = -1
@@ -83,7 +83,7 @@ export class Chart {
             const note = {
                 "beat": beat,
                 "sec": bms.Timing.fromBMSChart(chart).beatToSeconds(beat),
-                "rectangle": scene.add.rectangle(200 + 100 * noteIndex, 0, 100, 30, noteColor),
+                "rectangle": scene.add.rectangle(300 + 100 * noteIndex, 0, 100, 50, noteColor),
                 "isJudged": false,
                 "isLongStart": isLongNoteStart,
                 "isLongEnd": isLongNoteEnd
